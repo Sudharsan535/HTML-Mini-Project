@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Tracker - Find Nearby Indian Restaurants</title>
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #FF6B35;
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .search-container {
+            display: flex;
+            margin: 20px 0;
+        }
+        
+        .search-container input {
+            padding: 12px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 1rem;
+        }
+        
+        .search-container button {
+            padding: 12px 24px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        /* Restaurant Card Styles */
+        .restaurants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .restaurant-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .restaurant-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .restaurant-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .restaurant-info {
+            padding: 20px;
+        }
+        
+        .restaurant-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .restaurant-cuisine {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .restaurant-rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .stars {
+            color: #FFD700;
+            margin-right: 10px;
+        }
+        
+        .review-count {
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        .restaurant-address {
+            color: #555;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .view-details {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #FF6B35;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        /* Footer Styles */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 20px 0;
+            margin-top: 50px;
+            text-align: center;
+        }
+        
+        /* Filter Section */
+        .filter-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .filter-options {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .filter {
+            padding: 8px 15px;
+            background-color: #f1f1f1;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .filter.active {
+            background-color: #FF6B35;
+            color: white;
+        }
+        
+        .sort-options {
+            position: relative;
+        }
+        
+        .sort-select {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Restaurant Tracker</div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Search Section -->
+        <div class="search-container">
+            <input type="text" placeholder="Search for restaurants or cuisines...">
+            <button>Search</button>
+        </div>
+        
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-options">
+                <div class="filter active">All</div>
+                <div class="filter">North Indian</div>
+                <div class="filter">South Indian</div>
+                <div class="filter">Street Food</div>
+            </div>
+            <div class="sort-options">
+                <select class="sort-select">
+                    <option value="rating">Sort by Rating</option>
+                    <option value="name">Sort by Name</option>
+                    <option value="reviews">Sort by Reviews</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Restaurants Grid -->
+        <div class="restaurants-grid" id="restaurants-container">
+            <!-- Restaurant cards will be dynamically inserted here -->
+        </div>
+    </main>
+    
+    <!-- Footer Section -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Restaurant Tracker. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Restaurant data in JSON format
+        const restaurantsData = [
+            {
+                id: 1,
+                name: "Spice Garden",
+                cuisine: "North Indian, Mughlai",
+                rating: 4.7,
+                reviewCount: 428,
+                address: "42 Gandhi Road, New Delhi",
+                description: "Spice Garden offers authentic North Indian cuisine with a modern twist. Our chefs use traditional cooking methods and fresh spices to create memorable dishes.",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNtNEpzjqTO2WLqM0dBjWRk-L4R2tWCVYY7A&s",
+                specialDishes: [
+                    { name: "Butter Chicken", description: "Tender chicken cooked in a rich tomato and butter gravy", price: "₹350" },
+                    { name: "Dal Makhani", description: "Black lentils slow-cooked with butter and cream", price: "₹250" },
+                    { name: "Garlic Naan", description: "Soft bread stuffed with minced garlic and coriander", price: "₹80" }
+                ],
+                timings: "11:00 AM - 11:00 PM",
+                contactNumber: "+91 98765 43210"
+            },
+            {
+                id: 2,
+                name: "Dosa World",
+                cuisine: "South Indian",
+                rating: 4.5,
+                reviewCount: 356,
+                address: "12 MG Road, Bangalore",
+                description: "Dosa World specializes in authentic South Indian cuisine with a focus on different varieties of dosas and other traditional dishes.",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1wvksRgooQVhczFvZqdjSoZd6lbWVdtVlRQ&s",
+                specialDishes: [
+                    { name: "Mysore Masala Dosa", description: "Crispy dosa with spicy red chutney and potato filling", price: "₹180" },
+                    { name: "Idli Sambar", description: "Steamed rice cakes served with lentil soup and coconut chutney", price: "₹120" },
+                    { name: "Filter Coffee", description: "Traditional South Indian coffee", price: "₹60" }
+                ],
+                timings: "7:00 AM - 10:30 PM",
+                contactNumber: "+91 87654 32109"
+            },
+            {
+                id: 3,
+                name: "Punjabi Dhaba",
+                cuisine: "North Indian, Street Food",
+                rating: 4.3,
+                reviewCount: 287,
+                address: "78 Sector 17, Chandigarh",
+                description: "Authentic roadside Punjabi food experience with rustic ambiance and hearty portions.",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZgCLFcp05eotI8nUkcY-08dWJ8mbSUClB8g&s",
+                specialDishes: [
+                    { name: "Amritsari Kulcha", description: "Stuffed bread served with chickpea curry", price: "₹150" },
+                    { name: "Sarson ka Saag", description: "Mustard greens curry served with makki di roti", price: "₹220" },
+                    { name: "Lassi", description: "Sweet or salted yogurt drink", price: "₹90" }
+                ],
+                timings: "10:00 AM - 11:00 PM",
+                contactNumber: "+91 76543 21098"
+            },
+            {
+                id: 4,
+                name: "Chaat Corner",
+                cuisine: "Street Food, Snacks",
+                rating: 4.6,
+                reviewCount: 312,
+                address: "25 Linking Road, Mumbai",
+                description: "Popular spot for authentic Indian street food and chaats with a hygienic preparation.",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8sqgd-0bnb6UfizVmy4BurqQLx1YBu9y_Zg&s",
+                specialDishes: [
+                    { name: "Pani Puri", description: "Crispy hollow puris filled with spicy mint water", price: "₹100" },
+                    { name: "Bhel Puri", description: "Puffed rice mixed with vegetables and tangy chutneys", price: "₹120" },
+                    { name: "Aloo Tikki", description: "Spiced potato patties with yogurt and chutneys", price: "₹140" }
+                ],
+                timings: "11:00 AM - 9:30 PM",
+                contactNumber: "+91 65432 10987"
+            }
+        ];
+
+        // Function to create restaurant cards
+        function createRestaurantCards() {
+            const container = document.getElementById('restaurants-container');
+            
+            restaurantsData.forEach(restaurant => {
+                const card = document.createElement('div');
+                card.className = 'restaurant-card';
+                
+                // Create rating stars
+                let starsHTML = '';
+                const fullStars = Math.floor(restaurant.rating);
+                const halfStar = restaurant.rating % 1 >= 0.5;
+                
+                for (let i = 0; i < 5; i++) {
+                    if (i < fullStars) {
+                        starsHTML += '★';
+                    } else if (i === fullStars && halfStar) {
+                        starsHTML += '★';
+                    } else {
+                        starsHTML += '☆';
+                    }
+                }
+                
+                card.innerHTML = `
+                    <div class="restaurant-image" style="background-image: url(${restaurant.image})"></div>
+                    <div class="restaurant-info">
+                        <h3 class="restaurant-name">${restaurant.name}</h3>
+                        <p class="restaurant-cuisine">${restaurant.cuisine}</p>
+                        <div class="restaurant-rating">
+                            <div class="stars">${starsHTML}</div>
+                            <div class="review-count">${restaurant.reviewCount} reviews</div>
+                        </div>
+                        <p class="restaurant-address">${restaurant.address}</p>
+                        <a href="restaurant-details.html?id=${restaurant.id}" class="view-details">View Details</a>
+                    </div>
+                `;
+                
+                // Add click event to the card
+                card.addEventListener('click', () => {
+                    window.location.href = `restaurant-details.html?id=${restaurant.id}`;
+                });
+                
+                container.appendChild(card);
+            });
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            createRestaurantCards();
+            
+            // Add event listeners for filter buttons
+            const filterButtons = document.querySelectorAll('.filter');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    // Add active class to clicked button
+                    button.classList.add('active');
+                    
+                    // Here you would filter the restaurants based on the selected filter
+                    // For now, just display all restaurants
+                });
+            });
+        });
+
+        // Save restaurants data to localStorage for use on the details page
+        localStorage.setItem('restaurantsData', JSON.stringify(restaurantsData));
+    </script>
+</body>
+</html>
